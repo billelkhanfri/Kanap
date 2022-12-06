@@ -21,7 +21,17 @@ function productTemplate(el) {
 
      <p class="item__content__description__title">Description :</p>
      <p id="description">${el.description}</p>`
+
+    for (color in el.colors) {
+        document.querySelector('#colors').innerHTML += ` <option value="${color}"> ${el.colors[color]} </option > `
+    }
+
+
+
+
 }
+
+
 
 function individualProduct() {
     fetch("http://localhost:3000/api/products/" + param)
