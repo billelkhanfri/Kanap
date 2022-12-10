@@ -26,7 +26,7 @@ fetch("http://localhost:3000/api/products")
  * @param {*} el fullfill variables using API keys
  * @return {html} iterated html apopend section
  */
-async function itemTemplate(el) {
+async function itemTemplate(el, i) {
   items.innerHTML += ` <a href="./product.html?id=${el._id}">
               <article>
                   <img src="${el.imageUrl}" alt="${el.altTxt}">
