@@ -44,6 +44,7 @@ function individualProduct() {
     }
     /**
      * add events to button, color option and quantity input
+     * add preventDefault to deny storing empty keys
      * create an array which contains id, color and quantity
      * store data on localstorage 
      */
@@ -51,52 +52,53 @@ function individualProduct() {
      * 
      */
     function setToLocalStr() {
-        console.log(colors.options[colors.selectedIndex].text)
+
         colors.addEventListener('click', function () {
             if (colors.value != colors.options[colors.selectedIndex].text) {
                 addToCart.style.opacity = "1";
             }
         }),
 
-            quantity.addEventListener('click', function (event) {
-                if (quantity.value != "0") {
+            quantity.addEventListener('click', function () {
+                if (quantity.value !== "0") {
                     addToCart.style.opacity = "1";
                 }
             }),
 
             addToCart.addEventListener('click', function (event) {
 
-                if (quantity.value === "0" || colors.value == false) {
+                if (colors.value == false || quantity.value <= "0" || quantity.value > "100") {
                     event.preventDefault();
                     addToCart.style.opacity = "0.4";
                 }
 
-                else {
-                    let cartData = {
-                        keyId,
-                        colours: colors.value,
-                        quantities: quantity.value,
-                    };
-                    localStorage.setItem("product", JSON.stringify(cartData));
-                    addToCart.style.opacity = "1";
 
+                else {
+
+                    let cartData = {
+                        id: keyId,
+                        colours: String(colors.value),
+                        quantities: Number(quantity.value),
+
+                    };
+                    let products = cartData.id + cartData.colours;
+
+                    window.localStorage.setItem(products, JSON.stringify(cartData));
 
                 }
-            })
 
-    };
+
+            })
+    }
+
     setToLocalStr();
+
 }
 
+//window.localStorage.clear();
+
+
+
+
 individualProduct();
-
-
-localStorage.clear()
-
-
-
-
-
-
-
-
+window.localStorage.clear();
