@@ -42,63 +42,90 @@ function individualProduct() {
             document.querySelector('#colors').innerHTML += ` <option value="${color} "> ${color}</option > `
         });
     }
+
     /**
-     * add events to button, color option and quantity input
-     * add preventDefault to deny storing empty keys
-     * create an array which contains id, color and quantity
-     * store data on localstorage 
+     * add events to : button, color option and quantity input
+     * add preventDefault to deny all odd behaviours( see conditions)
+     * create an object which contains id, color and quantity
+     * store data on localstorage : key : id + color , value : id, color, quantity
      */
     /**
      * 
      */
     function setToLocalStr() {
 
+
         colors.addEventListener('click', function () {
-            if (colors.value != colors.options[colors.selectedIndex].text) {
+            if (colors.value !== colors.options[colors.selectedIndex].text) {
                 addToCart.style.opacity = "1";
             }
+
         }),
 
             quantity.addEventListener('click', function () {
-                if (quantity.value !== "0") {
+                if (quantity.value !== 0) {
                     addToCart.style.opacity = "1";
+
                 }
+
+
             }),
 
             addToCart.addEventListener('click', function (event) {
 
-                if (colors.value == false || quantity.value <= "0" || quantity.value > "100") {
+                if (
+                    colors.value === "" ||
+                    quantity.value < 1 ||
+                    quantity.value > 100) {
                     event.preventDefault();
                     addToCart.style.opacity = "0.4";
                 }
 
 
                 else {
-
                     let cartData = {
                         id: keyId,
                         colours: String(colors.value),
                         quantities: Number(quantity.value),
-
                     };
-                    let products = cartData.id + cartData.colours;
 
+                    let products = cartData.id + cartData.colours;
                     window.localStorage.setItem(products, JSON.stringify(cartData));
 
                 }
 
 
             })
+
+
     }
-
     setToLocalStr();
-
 }
+individualProduct();
+
+
+/**
+ * create an empty array which is going to contain all objects
+ * create a loop inside the local storage in order to push all new products ( objects) in the array
+ * transorm the data from string to objects using JSON.parse
+ */
+addToCart.addEventListener('click', function () {
+    function parseData() {
+        let cart = []
+        for (let i = 0; i < localStorage.length; i++) {
+            let productParse = JSON.parse(window.localStorage.getItem(localStorage.key(i)))
+
+            cart.push(productParse);
+        }
+        console.log(cart);
+
+
+
+
+
+    }
+    parseData();
+})
+
 
 //window.localStorage.clear();
-
-
-
-
-individualProduct();
-window.localStorage.clear();
