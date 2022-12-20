@@ -29,6 +29,9 @@ function individualProduct() {
             productTemplate(data);
 
         })
+        .catch(error => {
+            alert(" Erreur : " + error.message);
+        })
 
     function productTemplate(el, i) {
         document.title = el.name;
@@ -55,23 +58,28 @@ function individualProduct() {
     function setToLocalStr() {
 
 
-        colors.addEventListener('click', function () {
+        colors.addEventListener('change', function () {
             if (colors.value !== colors.options[colors.selectedIndex].text) {
                 addToCart.style.opacity = "1";
             }
 
         }),
 
-            quantity.addEventListener('click', function () {
+            quantity.addEventListener('change', function () {
                 if (quantity.value !== 0) {
                     addToCart.style.opacity = "1";
 
                 }
 
-
             }),
 
             addToCart.addEventListener('click', function (event) {
+                let cartData = {
+                    id: param,
+                    colours: String(colors.value),
+                    quantities: Number(quantity.value),
+                };
+                let products = cartData.id + cartData.colours;
 
                 if (
                     colors.value === "" ||
@@ -80,17 +88,27 @@ function individualProduct() {
                     event.preventDefault();
                     addToCart.style.opacity = "0.4";
                 }
+                else if (localStorage.getItem(products)) {
 
-
-                else {
-                    let cartData = {
-                        id: keyId,
+                    let updatedQtn = JSON.parse(localStorage.getItem(products)).quantities + cartData.quantities
+                    let newCartData = {
+                        id: param,
                         colours: String(colors.value),
-                        quantities: Number(quantity.value),
+                        quantities: Number(updatedQtn),
+
                     };
 
-                    let products = cartData.id + cartData.colours;
+                    window.localStorage.setItem(products, JSON.stringify(newCartData));
+                    alert('quantité modifiée')
+
+                }
+
+                else {
+
+
                     window.localStorage.setItem(products, JSON.stringify(cartData));
+                    alert('Produit Ajouté')
+
 
                 }
 
@@ -104,28 +122,3 @@ function individualProduct() {
 individualProduct();
 
 
-/**
- * create an empty array which is going to contain all objects
- * create a loop inside the local storage in order to push all new products ( objects) in the array
- * transorm the data from string to objects using JSON.parse
- */
-addToCart.addEventListener('click', function () {
-    function parseData() {
-        let cart = []
-        for (let i = 0; i < localStorage.length; i++) {
-            let productParse = JSON.parse(window.localStorage.getItem(localStorage.key(i)))
-
-            cart.push(productParse);
-        }
-        console.log(cart);
-
-
-
-
-
-    }
-    parseData();
-})
-
-
-//window.localStorage.clear();
