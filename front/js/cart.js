@@ -65,6 +65,7 @@ function cartTemplate() {
 
               deleteButton.closest('article').remove()
               window.localStorage.removeItem(localStorage.key(i))
+              articlesSum();
 
             })
 
@@ -113,6 +114,66 @@ function cartTemplate() {
         }
 
         changeQuantity()
+        //------funtion enables to calculate the sum of quantities and total price in cart page ------
+        /**
+         * get the element we want to modify "itemquantity"
+         * change the HTMLCollection to Array then loop over it
+         * add sum of quantities to quantity id textcontent
+         * 
+         */
+        //--------------------------------------------------------------------------
+
+        function articlesSum() {
+          // quantity
+
+          let qtn = document.querySelectorAll('.itemQuantity')
+          let totalQtn = 0;
+          let total = 0;
+
+          Array.from(qtn).forEach(function (modifyQtn) {
+            totalQtn += Number(modifyQtn.value);
+
+          })
+          document.getElementById('totalQuantity').textContent = totalQtn;
+
+          //price
+
+          // cart est l'array qui contient les keys est les valeur du local storage
+
+          total += carts.price * productParse.quantities;
+
+
+
+
+          //logs
+          console.log(`quantité récuperée du local Storage ${productParse.quantities}`)
+          console.log(`prix récuperé du fetch ${carts.price}`)
+          console.log(`le total ${total}`)
+          console.log(`nombre d'article ${totalQtn}`)
+
+
+          //itérer sur total avec foreach
+          let prices = document.getElementsByClassName('cart__item')
+          let price = 0;
+
+          /* Array.from(prices).forEach(function (item) {
+             price += Number(productParse.quantities) * Number(carts.price)*/
+          // })
+
+          // for 
+          for (j = 0; j < prices.length; j++) {
+            price = carts.price * productParse.quantities
+
+          }
+
+          console.log(price)
+          console.log(`itération sur ${prices}`)
+          console.log(prices)
+
+
+        }
+
+        articlesSum();
 
       })
 
