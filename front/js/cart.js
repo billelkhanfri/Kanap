@@ -161,6 +161,7 @@ function modifQuantité(api, element) {
       let totalQtn = 0;
 
       Array.from(qtn).forEach(function (modifyQtn) {
+
         totalQtn += Number(modifyQtn.value);
       })
       document.getElementById('totalQuantity').textContent = totalQtn;
