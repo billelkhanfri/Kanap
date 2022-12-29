@@ -1,24 +1,26 @@
 /**
- * stocker le paraméter et ça valeur dans une variable
- * stocker dans une variable et associer la méthod URLsearchparams avec le paramétre
- * stocker dans une variable le retour du paramétre requeter
+ * stocker parameter( id) of each product
+ * sstck and accociate the parameter with l URLsearchparams method
+ * stocker returned value of the method in a variable which will concatenate with the main URL of all products
  */
 
 const keyId = window.location.search;
 const urlParam = new URLSearchParams(keyId);
 const param = urlParam.get('id');
+//*************************************************************************************
+
+//------funtion enables gather data from API ------
 /**
- * requeter l'Api
- * obtenir des donneés json
- * itérer les données récuperer avec un boucle for of
+ * fetch  the Api
+ * get first promise and turn it to JSON format
+ * get the seconde promise and loop over it
  * @param {Response}  response 1st promise
  * @return {*} json data
- * @param {Response}  data 2nd promise
- * @return {Array} display individual product data
- * intégration des données de la page d'acueil en utilisant ECMA6 backtick
- *  @param {*} el fullfill variables using API keys
- * @return {html} iterated html apopend section
+ * @param {Response}  resources 2nd promise
+ * @return {Array} display all data
  */
+//-----------------------------------------------------------------------------
+
 function individualProduct() {
     fetch("http://localhost:3000/api/products/" + param)
         .then(function (response) {
@@ -46,29 +48,29 @@ function individualProduct() {
         });
     }
 
+    //*************************************************************************************
+
+    //------funtion enables to stock customer selection in the localStorage ------
     /**
      * add events to : button, color option and quantity input
      * add preventDefault to deny all odd behaviours( see conditions)
      * create an object which contains id, color and quantity
      * store data on localstorage : key : id + color , value : id, color, quantity
      */
-    /**
-     * 
-     */
-    function setToLocalStr() {
 
+    //-----------------------------------------------------------------------------
+
+    function setToLocalStr() {
 
         colors.addEventListener('change', function () {
             if (colors.value !== colors.options[colors.selectedIndex].text) {
                 addToCart.style.opacity = "1";
             }
-
         }),
 
             quantity.addEventListener('change', function () {
                 if (quantity.value !== 0) {
                     addToCart.style.opacity = "1";
-
                 }
 
             }),
@@ -105,16 +107,13 @@ function individualProduct() {
 
                 else {
 
-
                     window.localStorage.setItem(products, JSON.stringify(cartData));
                     alert('Produit Ajouté')
-
 
                 }
 
 
             })
-
 
     }
     setToLocalStr();
