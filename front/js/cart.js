@@ -258,36 +258,39 @@ getForm();
 
 //*************************************************************************************
 
-//-----------function enables to post clients info to API-----------
+//-----------function enables to post client's info to API-----------
 /**
-* 
-* listen to each filed changes and mutch the appropriate RegExp
-* validate or deny the entries with a warning p
+* get button and listent to click , stok form element in variables
+* create an Array contains an object thats  has assigned data entred by the user gfor each specified element in the DOM
+* and a key contans an array with values of loacalStorage id of each product
+* use fetch post methode to send data to API URL 
+* clear LoaclStorage
+* stock the promise in LocalStorage
+* change the current URL for confirmation HTML page
 */
 //------------------------------------------------------------------------------------
 
 
-//Envoi des informations client au localstorage
+
 function postForm() {
   const btn_commander = document.getElementById("order");
 
 
 
-  //Ecouter le panier
+
   btn_commander.addEventListener("click", (event) => {
 
-    // event.preventDefault();
-    // alert('veuillez choisir des articles avant de passer votre commande')
 
 
-    //Récupération des coordonnées du formulaire client
+
+
     let inputName = document.getElementById('firstName');
     let inputLastName = document.getElementById('lastName');
     let inputAdress = document.getElementById('address');
     let inputCity = document.getElementById('city');
     let inputMail = document.getElementById('email');
 
-    //Construction d'un array depuis le local storage
+
 
     let productId = []
 
@@ -324,7 +327,6 @@ function postForm() {
 
         localStorage.clear();
         localStorage.setItem("orderId", data.orderId);
-
         document.location.href = "confirmation.html";
       })
       .catch(error => {
