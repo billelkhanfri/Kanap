@@ -28,7 +28,7 @@ cart.map(
 
         cartTemplate(api, element)
         articlesSum(api, element)
-        modifQuantité(api, element)
+        modifQuantity(api, element)
         deleteItems(api, element)
 
       })
@@ -139,7 +139,7 @@ function deleteItems(api, element) {
 * update dataset quaitity new value
 */
 //-----------------------------------------------------------------------
-function modifQuantité(api, element) {
+function modifQuantity(api, element) {
 
   const art = document.querySelectorAll(".cart__item");
 
@@ -255,6 +255,86 @@ function getForm() {
   };
 }
 getForm();
+
+//*************************************************************************************
+
+//-----------function enables to post clients info to API-----------
+/**
+* 
+* listen to each filed changes and mutch the appropriate RegExp
+* validate or deny the entries with a warning p
+*/
+//------------------------------------------------------------------------------------
+
+
+//Envoi des informations client au localstorage
+function postForm() {
+  const btn_commander = document.getElementById("order");
+
+
+
+  //Ecouter le panier
+  btn_commander.addEventListener("click", (event) => {
+
+    // event.preventDefault();
+    // alert('veuillez choisir des articles avant de passer votre commande')
+
+
+    //Récupération des coordonnées du formulaire client
+    let inputName = document.getElementById('firstName');
+    let inputLastName = document.getElementById('lastName');
+    let inputAdress = document.getElementById('address');
+    let inputCity = document.getElementById('city');
+    let inputMail = document.getElementById('email');
+
+    //Construction d'un array depuis le local storage
+
+    let productId = []
+
+    for (let i = 0; i < localStorage.length; i++) {
+      let productParse = JSON.parse(window.localStorage.getItem(localStorage.key(i))).id
+      productId.push(productParse)
+
+    }
+
+    const order = {
+      contact: {
+        firstName: inputName.value,
+        lastName: inputLastName.value,
+        address: inputAdress.value,
+        city: inputCity.value,
+        email: inputMail.value,
+      },
+      products: productId,
+    }
+
+
+    fetch("http://localhost:3000/api/products/order", {
+
+      method: 'POST',
+      body: JSON.stringify(order),
+      headers: {
+        'Accept': 'application/json',
+        "Content-Type": "application/json"
+      },
+    })
+
+      .then((response) => response.json())
+      .then((data) => {
+
+        localStorage.clear();
+        localStorage.setItem("orderId", data.orderId);
+
+        document.location.href = "confirmation.html";
+      })
+      .catch(error => {
+        alert(" Erreur : " + error.message);
+      })
+      ;
+  })
+}
+postForm();
+
 
 
 
