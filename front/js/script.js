@@ -1,4 +1,4 @@
-//------funtion enables to calculate the sum of quantities and prices in cart page ------
+//------funtion enables gather data from API ------
 /**
  * fetch  the Api
  * get first promise and turn it to JSON format
@@ -31,7 +31,7 @@ getAllElements();
 
 //*************************************************************************************
 
-//------funtion enables to calculate the sum of quantities and prices in cart page ------
+//------funtion enables to display gathered data ------
 /**
  * inject HTML using ECMA6 backtick
  * @param {*} el fullfill variables using API keys

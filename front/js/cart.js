@@ -170,7 +170,7 @@ function modifQuantité(api, element) {
 * listen to each filed changes and mutch the appropriate RegExp
 * validate or deny the entries with a warning p
 */
-//-----------------------------------------------------------------------
+//---------------------------------listening-----------------------------------------
 
 function getForm() {
 
@@ -200,55 +200,57 @@ function getForm() {
     validEmail(this);
   });
 
-  //-----------------------------------------------------------------------
+  //----------------------------Validating functions----------------------------------
 
   const validFirstName = function (inputFirstName) {
     let firstNameErrorMsg = inputFirstName.nextElementSibling;
 
-    if (charRegExp.test(inputFirstName.value)) {
-      firstNameErrorMsg.innerHTML = '';
-    } else {
+    if (charRegExp.test(inputFirstName.value) == false) {
+
       firstNameErrorMsg.innerHTML = 'Veuillez renseigner ce champ.';
+      form.firstName.style.border = "solid 1.5px red"
+
     }
   };
 
   const validLastName = function (inputLastName) {
     let lastNameErrorMsg = inputLastName.nextElementSibling;
 
-    if (charRegExp.test(inputLastName.value)) {
-      lastNameErrorMsg.innerHTML = '';
-    } else {
+    if (charRegExp.test(inputLastName.value) == false) {
+
       lastNameErrorMsg.innerHTML = 'Veuillez renseigner ce champ.';
+      form.lastName.style.border = "solid 1.5px red"
+
     }
   };
 
   const validAddress = function (inputAddress) {
     let addressErrorMsg = inputAddress.nextElementSibling;
 
-    if (addressRegExp.test(inputAddress.value)) {
-      addressErrorMsg.innerHTML = '';
-    } else {
+    if (addressRegExp.test(inputAddress.value) == false) {
+
       addressErrorMsg.innerHTML = 'Veuillez renseigner ce champ.';
+      form.address.style.border = "solid 1.5px red"
     }
   };
 
   const validCity = function (inputCity) {
     let cityErrorMsg = inputCity.nextElementSibling;
 
-    if (charRegExp.test(inputCity.value)) {
-      cityErrorMsg.innerHTML = '';
-    } else {
+    if (charRegExp.test(inputCity.value) === false) {
+
       cityErrorMsg.innerHTML = 'Veuillez renseigner ce champ.';
+      form.city.style.border = "solid 1.5px red"
     }
   };
 
   const validEmail = function (inputEmail) {
     let emailErrorMsg = inputEmail.nextElementSibling;
 
-    if (emailRegExp.test(inputEmail.value)) {
-      emailErrorMsg.innerHTML = '';
-    } else {
+    if (emailRegExp.test(inputEmail.value) === false) {
+
       emailErrorMsg.innerHTML = 'Veuillez renseigner votre email.';
+      form.email.style.border = "solid 1.5px red"
     }
   };
 }
