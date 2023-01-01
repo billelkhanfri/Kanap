@@ -82,6 +82,8 @@ function cartTemplate(api, element) {
  * display the sum of prices 
  */
 //-----------------------------------------------------------------------------
+document.getElementById('totalQuantity').textContent = 0
+document.getElementById('totalPrice').textContent = totalPrix = 0
 
 function articlesSum() {
   let totalPrix = 0;
@@ -150,7 +152,7 @@ function modifQuantity(api, element) {
       else {
 
         for (article of cart) {
-          article.quantities = e.target.value
+          article.quantities = Number(e.target.value)
           let product = article.id + article.colours
           window.localStorage.setItem(product, JSON.stringify(article))
           te.dataset.quantité = e.target.value;
@@ -205,39 +207,58 @@ function getForm() {
   const validFirstName = function (inputFirstName) {
     let firstNameErrorMsg = inputFirstName.nextElementSibling;
 
-    if (charRegExp.test(inputFirstName.value) == false) {
+    if (charRegExp.test(inputFirstName.value) == true) {
+      form.firstName.style.border = "none"
+      firstNameErrorMsg.innerHTML = '';
+    }
+    else {
 
       firstNameErrorMsg.innerHTML = 'Veuillez renseigner ce champ.';
       form.firstName.style.border = "solid 1.5px red"
-
     }
+
   };
 
   const validLastName = function (inputLastName) {
     let lastNameErrorMsg = inputLastName.nextElementSibling;
 
-    if (charRegExp.test(inputLastName.value) == false) {
+    if (charRegExp.test(inputLastName.value) == true) {
+      form.lastName.style.border = "none"
+      lastNameErrorMsg.innerHTML = '';
+    }
 
+    else {
       lastNameErrorMsg.innerHTML = 'Veuillez renseigner ce champ.';
       form.lastName.style.border = "solid 1.5px red"
-
     }
-  };
+
+
+  }
+
 
   const validAddress = function (inputAddress) {
     let addressErrorMsg = inputAddress.nextElementSibling;
 
-    if (addressRegExp.test(inputAddress.value) == false) {
+    if (addressRegExp.test(inputAddress.value) == true) {
+      addressErrorMsg.innerHTML = '';
+      form.address.style.border = "none"
+    }
 
+    else {
       addressErrorMsg.innerHTML = 'Veuillez renseigner ce champ.';
-      form.address.style.border = "solid 1.5px red"
+      form.address.style.border = "solid 1.5px red";
     }
   };
 
   const validCity = function (inputCity) {
     let cityErrorMsg = inputCity.nextElementSibling;
 
-    if (charRegExp.test(inputCity.value) === false) {
+    if (charRegExp.test(inputCity.value) == true) {
+      cityErrorMsg.innerHTML = '';
+      form.city.style.border = "none"
+    }
+
+    else {
 
       cityErrorMsg.innerHTML = 'Veuillez renseigner ce champ.';
       form.city.style.border = "solid 1.5px red"
@@ -247,9 +268,12 @@ function getForm() {
   const validEmail = function (inputEmail) {
     let emailErrorMsg = inputEmail.nextElementSibling;
 
-    if (emailRegExp.test(inputEmail.value) === false) {
-
-      emailErrorMsg.innerHTML = 'Veuillez renseigner votre email.';
+    if (emailRegExp.test(inputEmail.value) == true) {
+      form.email.style.border = "none"
+      emailErrorMsg.innerHTML = '';
+    }
+    else {
+      emailErrorMsg.innerHTML = 'Veuillez renseigner ce champ.';
       form.email.style.border = "solid 1.5px red"
     }
   };
@@ -273,16 +297,11 @@ getForm();
 
 
 function postForm() {
-  const btn_commander = document.getElementById("order");
+  const orderButton = document.getElementById("order");
+  let form = document.querySelector(".cart__order__form");
 
 
-
-
-  btn_commander.addEventListener("click", (event) => {
-
-
-
-
+  orderButton.addEventListener("click", (e) => {
 
     let inputName = document.getElementById('firstName');
     let inputLastName = document.getElementById('lastName');
@@ -290,50 +309,68 @@ function postForm() {
     let inputCity = document.getElementById('city');
     let inputMail = document.getElementById('email');
 
-
-
-    let productId = []
-
-    for (let i = 0; i < localStorage.length; i++) {
-      let productParse = JSON.parse(window.localStorage.getItem(localStorage.key(i))).id
-      productId.push(productParse)
-
+    if (localStorage.length == 0) {
+      e.preventDefault();
+      alert('Veuillez choisir un article avant de passez votre commande.')
+    }
+    else if (
+      inputAdress.value === '' ||
+      inputCity.value === '' ||
+      inputLastName.value === '' ||
+      inputMail.value === '' ||
+      inputName.value === ''
+    ) {
+      e.preventDefault();
+      alert('Veuillez renseigner tout les champs.')
     }
 
-    const order = {
-      contact: {
-        firstName: inputName.value,
-        lastName: inputLastName.value,
-        address: inputAdress.value,
-        city: inputCity.value,
-        email: inputMail.value,
-      },
-      products: productId,
+    else {
+
+      let productId = []
+
+      for (let i = 0; i < localStorage.length; i++) {
+        let productParse = JSON.parse(window.localStorage.getItem(localStorage.key(i))).id
+        productId.push(productParse)
+
+      }
+
+      const order = {
+        contact: {
+          firstName: inputName.value,
+          lastName: inputLastName.value,
+          address: inputAdress.value,
+          city: inputCity.value,
+          email: inputMail.value,
+        },
+        products: productId,
+      }
+
+
+      fetch("http://localhost:3000/api/products/order", {
+
+        method: 'POST',
+        body: JSON.stringify(order),
+        headers: {
+          'Accept': 'application/json',
+          "Content-Type": "application/json"
+        },
+      })
+
+        .then((response) => response.json())
+        .then((data) => {
+
+          localStorage.clear();
+          localStorage.setItem("orderId", data.orderId);
+          document.location.href = "confirmation.html";
+        })
+        .catch(error => {
+          alert(" Erreur : " + error.message);
+        })
+        ;
+
     }
-
-
-    fetch("http://localhost:3000/api/products/order", {
-
-      method: 'POST',
-      body: JSON.stringify(order),
-      headers: {
-        'Accept': 'application/json',
-        "Content-Type": "application/json"
-      },
-    })
-
-      .then((response) => response.json())
-      .then((data) => {
-
-        localStorage.clear();
-        localStorage.setItem("orderId", data.orderId);
-        document.location.href = "confirmation.html";
-      })
-      .catch(error => {
-        alert(" Erreur : " + error.message);
-      })
-      ;
   })
+
 }
 postForm();
 
