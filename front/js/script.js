@@ -35,7 +35,6 @@ getAllElements();
 /**
  * inject HTML using ECMA6 backtick
  * @param {*} el fullfill variables using API keys
- * @return {html} loop over it
  */
 //-----------------------------------------------------------------------------
 async function itemTemplate(el, i) {
