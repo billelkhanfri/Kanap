@@ -229,51 +229,56 @@ function getForm() {
       lastNameErrorMsg.innerHTML = '';
     }
 
-    lastNameErrorMsg.innerHTML = 'Veuillez renseigner ce champ.';
-    form.lastName.style.border = "solid 1.5px red"
+    else {
+      lastNameErrorMsg.innerHTML = 'Veuillez renseigner votre nom.';
+      form.lastName.style.border = "solid 1.5px red"
+    }
+
+
   }
 
 
-}
+  const validAddress = function (inputAddress) {
+    let addressErrorMsg = inputAddress.nextElementSibling;
 
+    if (addressRegExp.test(inputAddress.value) == true) {
+      addressErrorMsg.innerHTML = '';
+      form.address.style.border = "none"
+    }
 
-const validAddress = function (inputAddress) {
-  let addressErrorMsg = inputAddress.nextElementSibling;
-
-  if (addressRegExp.test(inputAddress.value) == true) {
-    addressErrorMsg.innerHTML = '';
-    form.address.style.border = "none"
-  }
-
-  addressErrorMsg.innerHTML = 'Veuillez renseigner ce champ.';
-  form.address.style.border = "solid 1.5px red"
-}
+    else {
+      addressErrorMsg.innerHTML = 'Veuillez renseigner une adresse valide.';
+      form.address.style.border = "solid 1.5px red";
+    }
   };
 
-const validCity = function (inputCity) {
-  let cityErrorMsg = inputCity.nextElementSibling;
+  const validCity = function (inputCity) {
+    let cityErrorMsg = inputCity.nextElementSibling;
 
-  if (charRegExp.test(inputCity.value) == true) {
-    cityErrorMsg.innerHTML = '';
-    form.city.style.border = "none"
-  }
+    if (charRegExp.test(inputCity.value) == true) {
+      cityErrorMsg.innerHTML = '';
+      form.city.style.border = "none"
+    }
 
-  else {
+    else {
 
-    cityErrorMsg.innerHTML = 'Veuillez renseigner votre ville.';
-    form.city.style.border = "solid 1.5px red"
-  }
-};
+      cityErrorMsg.innerHTML = 'Veuillez renseigner votre ville.';
+      form.city.style.border = "solid 1.5px red"
+    }
+  };
 
-const validEmail = function (inputEmail) {
-  let emailErrorMsg = inputEmail.nextElementSibling;
+  const validEmail = function (inputEmail) {
+    let emailErrorMsg = inputEmail.nextElementSibling;
 
-  if (emailRegExp.test(inputEmail.value) === false) {
-
-    emailErrorMsg.innerHTML = 'Veuillez renseigner votre email.';
-    form.email.style.border = "solid 1.5px red"
-  }
-};
+    if (emailRegExp.test(inputEmail.value) == true) {
+      form.email.style.border = "none"
+      emailErrorMsg.innerHTML = '';
+    }
+    else {
+      emailErrorMsg.innerHTML = 'Veuillez renseigner une adress email valide.';
+      form.email.style.border = "solid 1.5px red"
+    }
+  };
 }
 getForm();
 
@@ -346,19 +351,20 @@ function postForm() {
       fetch("http://localhost:3000/api/products/order", {
 
         method: 'POST',
-        body: JSON.stringify(order),
+
         headers: {
           'Accept': 'application/json',
           "Content-Type": "application/json"
         },
+        body: JSON.stringify(order),
       })
 
         .then((response) => response.json())
         .then((data) => {
-
+          document.location.href = "confirmation.html";
           localStorage.clear();
           localStorage.setItem("orderId", data.orderId);
-          document.location.href = "confirmation.html";
+
         })
         .catch(error => {
           alert(" Erreur : " + error.message);
