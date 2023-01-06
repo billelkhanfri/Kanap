@@ -9,7 +9,7 @@
 function orderNumber() {
 
     const confirm = document.getElementById("orderId");
-    confirm.innerText = localStorage.getItem("orderId");
+    confirm.innerText = JSON.parse(localStorage.getItem("orderId"));
     localStorage.clear();
 }
 

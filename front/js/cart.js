@@ -27,9 +27,6 @@ cart.map(
       .then(api => {
 
         cartTemplate(api, element)
-
-
-
         modifQuantity(api, element)
         deleteItems(api, element)
         articlesSum(api, element)
@@ -237,7 +234,6 @@ function getForm() {
 
   }
 
-
   const validAddress = function (inputAddress) {
     let addressErrorMsg = inputAddress.nextElementSibling;
 
@@ -296,12 +292,8 @@ getForm();
 */
 //------------------------------------------------------------------------------------
 
-
-
 function postForm() {
   const orderButton = document.getElementById("order");
-  let form = document.querySelector(".cart__order__form");
-
 
   orderButton.addEventListener("click", (e) => {
 
@@ -347,7 +339,6 @@ function postForm() {
         products: productId,
       }
 
-
       fetch("http://localhost:3000/api/products/order", {
 
         method: 'POST',
@@ -361,9 +352,12 @@ function postForm() {
 
         .then((response) => response.json())
         .then((data) => {
-          document.location.href = "confirmation.html";
+
           localStorage.clear();
-          localStorage.setItem("orderId", data.orderId);
+
+          window.localStorage.setItem("orderId", JSON.stringify(data.orderId));
+          const orderID = data.orderId;
+          window.location = `confirmation.html?orderId=${orderID}`
 
         })
         .catch(error => {
