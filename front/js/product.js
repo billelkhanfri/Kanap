@@ -79,7 +79,7 @@ function individualProduct() {
                     colours: String(colors.value),
                     quantities: Number(quantity.value),
                 };
-                let products = cartData.id + cartData.colours;
+                let products = cartData.id + "-" + cartData.colours;
 
                 if (
                     colors.value === "" ||

@@ -12,7 +12,9 @@ for (let i = 0; i < localStorage.length; i++) {
   let productParse = JSON.parse(window.localStorage.getItem(localStorage.key(i)))
   cart.push(productParse);
 
+
 }
+
 //*************************************************************************************
 
 cart.map(
@@ -119,7 +121,7 @@ function deleteItems(api, element) {
     deleteButton.addEventListener("click", function (e) {
 
       deleteButton.closest('article').remove();
-      window.localStorage.removeItem(e.target.dataset.id + e.target.dataset.color);
+      window.localStorage.removeItem(e.target.dataset.id + "-" + e.target.dataset.color);
 
       articlesSum(api, element);
 
@@ -152,7 +154,7 @@ function modifQuantity(api, element) {
 
         for (article of cart) {
           article.quantities = Number(e.target.value)
-          let product = article.id + article.colours
+          let product = article.id + "-" + article.colours
           window.localStorage.setItem(product, JSON.stringify(article))
           te.dataset.quantité = e.target.value;
           articlesSum(api, element);
@@ -172,15 +174,15 @@ function modifQuantity(api, element) {
 * validate or deny the entries with a warning p
 */
 //---------------------------------listening-----------------------------------------
+const emailRegExp = new RegExp('^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$');
+const charRegExp = new RegExp("[a-zA-Z ,.'-]+$");
+const addressRegExp = /^[^±!@£$%^&*_+¡€#¢§¶•ªº()"«\\/\{\}\[\]\~<>?:;|=.]+$/;
 
 function getForm() {
 
   let form = document.querySelector(".cart__order__form");
 
-  let emailRegExp = new RegExp('^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$');
-  let charRegExp = new RegExp("[a-zA-Z ,.'-]+$");
-  //let addressRegExp = new RegExp("^[0-9](?:(?:[,. ]){1}[-a-zA-Zàâäéèêëïîôöùûüç]+)+",);
-  let addressRegExp = /^[^±!@£$%^&*_+¡€#¢§¶•ªº()"«\\/\{\}\[\]\~<>?:;|=.]+$/;
+
   form.firstName.addEventListener('change', function () {
     validFirstName(this);
   });
@@ -294,14 +296,13 @@ getForm();
 
 function postForm() {
   const orderButton = document.getElementById("order");
+  let inputName = document.getElementById('firstName');
+  let inputLastName = document.getElementById('lastName');
+  let inputAdress = document.getElementById('address');
+  let inputCity = document.getElementById('city');
+  let inputMail = document.getElementById('email');
 
   orderButton.addEventListener("click", (e) => {
-
-    let inputName = document.getElementById('firstName');
-    let inputLastName = document.getElementById('lastName');
-    let inputAdress = document.getElementById('address');
-    let inputCity = document.getElementById('city');
-    let inputMail = document.getElementById('email');
 
     if (localStorage.length == 0) {
       e.preventDefault();
@@ -317,14 +318,24 @@ function postForm() {
       e.preventDefault();
       alert('Veuillez renseigner tout les champs.')
     }
+    else if (charRegExp.test(inputName.value) == false ||
+      charRegExp.test(inputLastName.value) == false ||
+      addressRegExp.test(inputAdress.value) == false ||
+      charRegExp.test(inputCity.value) == false ||
+      emailRegExp.test(inputMail.value) == false
+    ) {
+      e.preventDefault();
+      alert('veuillez bien corrigez les erreurs dans le formulaire')
+    }
 
     else {
 
       let productId = []
 
       for (let i = 0; i < localStorage.length; i++) {
-        let productParse = JSON.parse(window.localStorage.getItem(localStorage.key(i))).id
-        productId.push(productParse)
+        const productParse = localStorage.key(i)
+        const ids = productParse.split("-")[0];
+        productId.push(ids)
 
       }
 
@@ -342,22 +353,22 @@ function postForm() {
       fetch("http://localhost:3000/api/products/order", {
 
         method: 'POST',
-
+        mode: 'cors',
         headers: {
           'Accept': 'application/json',
-          "Content-Type": "application/json"
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify(order),
       })
 
         .then((response) => response.json())
+
         .then((data) => {
 
-          localStorage.clear();
-
           window.localStorage.setItem("orderId", JSON.stringify(data.orderId));
+
           const orderID = data.orderId;
-          window.location = `confirmation.html?orderId=${orderID}`
+          window.location.href = `confirmation.html?orderId=${orderID}`
 
         })
         .catch(error => {
