@@ -30,8 +30,9 @@ cart.map(
 
         cartTemplate(api, element)
         modifQuantity(api, element)
-        deleteItems(api, element)
+
         articlesSum(api, element)
+        deleteItems(api, element)
       })
 
       .catch(error => {
@@ -152,15 +153,25 @@ function modifQuantity(api, element) {
       if (e.target.value < 1 || e.target.value > 100) { retrun }
       else {
 
-        for (article of cart) {
-          article.quantities = Number(e.target.value)
-          let product = article.id + "-" + article.colours
-          window.localStorage.setItem(product, JSON.stringify(article))
-          te.dataset.quantité = e.target.value;
-          articlesSum(api, element);
 
-        }
+
+
+
+        let CartData = {
+          id: e.currentTarget.dataset.id,
+          colours: String(e.currentTarget.dataset.color),
+          quantities: Number(e.target.value),
+
+        };
+        let product = e.currentTarget.dataset.id + "-" + String(e.currentTarget.dataset.color)
+        window.localStorage.setItem(product, JSON.stringify(CartData))
+        te.dataset.quantité = e.target.value;
+        articlesSum(api, element);
+
+
+
       }
+
     })
 
   })
@@ -353,7 +364,6 @@ function postForm() {
       fetch("http://localhost:3000/api/products/order", {
 
         method: 'POST',
-        mode: 'cors',
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json'
